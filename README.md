@@ -22,7 +22,6 @@ A complete PHP web server as a Home Assistant Add-on with direct access to your 
 5. Add this URL:
 ```
 https://github.com/TillitschScHocK/PHP4HA
-
 ```
 
 
