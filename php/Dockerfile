@@ -29,13 +29,13 @@ RUN apk add --no-cache \
     bash \
     jq
 
-# Create symbolic link for php
-RUN ln -s /usr/bin/php83 /usr/bin/php
+# Create symbolic link for php (remove if exists first)
+RUN rm -f /usr/bin/php && ln -s /usr/bin/php83 /usr/bin/php
 
 # Copy data
 COPY rootfs /
 
 # Make run script executable
-RUN chmod a+x /etc/services.d/php-server/run
+RUN chmod a+x /etc/services.d/php-server/run /etc/services.d/php-server/finish
 
 WORKDIR /
