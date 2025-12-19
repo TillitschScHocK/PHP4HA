@@ -2,117 +2,124 @@
 
 ## Installation
 
-Folge diesen Schritten zur Installation des PHP Web Server Add-ons:
+Follow these steps to install the PHP Web Server Add-on:
 
-1. Navigiere zum Supervisor-Panel in deiner Home Assistant Oberfläche
-2. Klicke auf den Add-on Store
-3. Füge dieses Repository hinzu: `https://github.com/TillitschScHocK/PHP4HA`
-4. Finde "PHP Web Server" und klicke auf Installieren
+1. Navigate to the Supervisor panel (Add-ons) in your Home Assistant interface.
+2. Click on the Add-on Store.
+3. Add this repository: `https://github.com/TillitschScHocK/PHP4HA`
+4. Find "PHP Web Server" and click **Install**.
 
-## Verwendung
+## Usage
 
-Nach der Installation:
+After installation:
 
-1. Konfiguriere die Add-on Einstellungen (Port, Unterverzeichnis, etc.)
-2. Starte das Add-on
-3. Überprüfe die Logs, um sicherzustellen, dass es erfolgreich gestartet wurde
-4. Greife auf deinen PHP-Webserver zu: `http://homeassistant.local:8099`
+1. Configure the Add-on settings (Port, Subdirectory, etc.).
+2. Start the Add-on.
+3. Check the logs to ensure it started successfully.
+4. Access your PHP web server: `http://homeassistant.local:8099`
 
-## Konfiguration
+## Configuration
 
-Das Add-on kann mit folgenden Optionen konfiguriert werden:
+The Add-on can be configured with the following options:
 
-### Port (erforderlich)
+### Port (required)
 
-Der Netzwerk-Port, auf dem der PHP-Server lauschen wird.
+The network port on which the PHP server will listen.
 
 ```yaml
 port: 8099
+
 ```
 
-### Subdirectory (erforderlich)
+### Subdirectory (required)
 
-Das Unterverzeichnis in `/config/www/`, in dem sich deine PHP-Dateien befinden.
+The subdirectory inside `/config/www/` where your PHP files are located.
 
 ```yaml
 subdirectory: "php"
+
 ```
 
-**Wichtig:** Das Add-on erstellt automatisch:
-- `/config/www/` (falls nicht vorhanden)
-- `/config/www/[subdirectory]/` (falls nicht vorhanden)
-- Eine Standard-`index.php` (falls nicht vorhanden)
+**Important:** The Add-on automatically creates:
 
-**Beispiele:**
-- `subdirectory: "php"` → Document Root: `/config/www/php/`
-- `subdirectory: "meine-app"` → Document Root: `/config/www/meine-app/`
+* `/config/www/` (if it doesn't exist)
+* `/config/www/[subdirectory]/` (if it doesn't exist)
+* A default `index.php` (if it doesn't exist)
+
+**Examples:**
+
+* `subdirectory: "php"` → Document Root: `/config/www/php/`
+* `subdirectory: "my-app"` → Document Root: `/config/www/my-app/`
 
 ### PHP Display Errors (optional)
 
-Steuert, ob PHP-Fehler im Browser angezeigt werden.
+Controls whether PHP errors are displayed in the browser.
 
-- `On`: Fehler anzeigen (nützlich für Entwicklung)
-- `Off`: Fehler verbergen (empfohlen für Produktion)
+* `On`: Show errors (useful for development)
+* `Off`: Hide errors (recommended for production)
 
 ```yaml
 php_display_errors: "Off"
+
 ```
 
 ### PHP Memory Limit (optional)
 
-Setzt die maximale Speichermenge, die ein PHP-Skript verbrauchen darf.
+Sets the maximum amount of memory a PHP script is allowed to consume.
 
 ```yaml
 php_memory_limit: "128M"
+
 ```
 
-## Enthaltene PHP-Extensions
+## Included PHP Extensions
 
-Dieses Add-on enthält folgende PHP-Extensions:
+This Add-on includes the following PHP extensions:
 
-- opcache
-- mysqli
-- json
-- openssl
-- curl
-- zlib
-- xml
-- phar
-- intl
-- dom
-- xmlreader/xmlwriter
-- simplexml
-- ctype
-- mbstring
-- gd
-- session
-- pdo
-- pdo_mysql
-- pdo_sqlite
-- fileinfo
+* opcache
+* mysqli
+* json
+* openssl
+* curl
+* zlib
+* xml
+* phar
+* intl
+* dom
+* xmlreader/xmlwriter
+* simplexml
+* ctype
+* mbstring
+* gd
+* session
+* pdo
+* pdo_mysql
+* pdo_sqlite
+* fileinfo
 
-## Deine erste PHP-Seite erstellen
+## Creating Your First PHP Page
 
-1. Das Add-on erstellt automatisch `/config/www/[subdirectory]/`
-2. Beim ersten Start wird eine Standard-`index.php` erstellt
-3. Du kannst diese bearbeiten oder eigene PHP-Dateien hinzufügen
+1. The Add-on automatically creates `/config/www/[subdirectory]/`.
+2. Upon the first start, a default `index.php` is created.
+3. You can edit this file or add your own PHP files.
 
-**Beispiel:** Erstelle `/config/www/php/info.php`:
+**Example:** Create `/config/www/php/info.php`:
 
 ```php
 <?php
-echo "<h1>Willkommen bei PHP auf Home Assistant!</h1>";
+echo "<h1>Welcome to PHP on Home Assistant!</h1>";
 phpinfo();
 ?>
+
 ```
 
-Zugriff: `http://homeassistant.local:8099/info.php`
+Access: `http://homeassistant.local:8099/info.php`
 
-## Zugriff auf Home Assistant Daten
+## Accessing Home Assistant Data
 
-Da das Add-on Zugriff auf das `/config` Verzeichnis hat, kannst du Home Assistant Konfigurationsdateien lesen, auf die Datenbank zugreifen und mehr.
+Since the Add-on has access to the `/config` directory, you can read Home Assistant configuration files, access the database, and more.
 
-### Beispiel: YAML-Datei lesen
+### Example: Reading a YAML file
 
 ```php
 <?php
@@ -122,9 +129,10 @@ if (file_exists($yaml_file)) {
     echo "<pre>" . htmlspecialchars($content) . "</pre>";
 }
 ?>
+
 ```
 
-### Beispiel: Dateien im config-Verzeichnis auflisten
+### Example: Listing files in the config directory
 
 ```php
 <?php
@@ -137,43 +145,45 @@ foreach($files as $file) {
 }
 echo "</ul>";
 ?>
+
 ```
 
 ## Troubleshooting
 
-### Add-on startet nicht
+### Add-on does not start
 
-- Überprüfe die Add-on Logs auf Fehlermeldungen
-- Stelle sicher, dass der Port nicht bereits verwendet wird
-- Überprüfe, ob genügend Speicherplatz vorhanden ist
+* Check the Add-on logs for error messages.
+* Ensure the port is not already in use.
+* Verify that there is enough storage space available.
 
-### Kann nicht auf den Webserver zugreifen
+### Cannot access the web server
 
-- Überprüfe, ob das Add-on läuft
-- Überprüfe deine Home Assistant Netzwerkkonfiguration
-- Versuche den Zugriff über die IP-Adresse statt Hostname
-- Stelle sicher, dass der Port nicht durch eine Firewall blockiert wird
+* Verify that the Add-on is running.
+* Check your Home Assistant network configuration.
+* Try accessing via the IP address instead of the hostname.
+* Ensure the port is not blocked by a firewall.
 
-### PHP-Fehler werden nicht angezeigt
+### PHP errors are not shown
 
-- Setze `php_display_errors: "On"` in der Konfiguration
-- Starte das Add-on nach der Konfigurationsänderung neu
+* Set `php_display_errors: "On"` in the configuration.
+* Restart the Add-on after changing the configuration.
 
-### Verzeichnis wird nicht erstellt
+### Directory is not created
 
-- Das Add-on erstellt automatisch `/config/www/[subdirectory]/`
-- Überprüfe die Logs, ob Berechtigungsfehler auftreten
-- Stelle sicher, dass `/config` beschreibbar ist
+* The Add-on automatically creates `/config/www/[subdirectory]/`.
+* Check the logs for permission errors.
+* Ensure that `/config` is writable.
 
-## Sicherheitshinweise
+## Security Notes
 
-- Verwende `php_display_errors: "Off"` in Produktionsumgebungen
-- Sei vorsichtig beim Öffnen dieses Add-ons für das Internet
-- Implementiere eine ordnungsgemäße Authentifizierung in deinen PHP-Anwendungen
-- Halte deinen PHP-Code sicher und aktuell
-- Vermeide die Speicherung sensibler Daten in web-zugänglichen Verzeichnissen
+* Use `php_display_errors: "Off"` in production environments.
+* Be cautious when exposing this Add-on to the internet.
+* Implement proper authentication in your PHP applications.
+* Keep your PHP code secure and up to date.
+* Avoid storing sensitive data in web-accessible directories.
 
 ## Support
 
-Für Probleme, Fragen oder Feature-Requests:
-- GitHub Issues: https://github.com/TillitschScHocK/PHP4HA/issues
+For issues, questions, or feature requests:
+
+* GitHub Issues: [https://github.com/TillitschScHocK/PHP4HA/issues](https://github.com/TillitschScHocK/PHP4HA/issues)
