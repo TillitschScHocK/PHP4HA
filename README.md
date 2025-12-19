@@ -22,6 +22,7 @@ A complete PHP web server as a Home Assistant Add-on with direct access to your 
 5. Add this URL:
 ```
 https://github.com/TillitschScHocK/PHP4HA
+
 ```
 
 
@@ -44,10 +45,16 @@ php_display_errors: "Off"
 php_memory_limit: "128M"
 
 ```
+
+**Important:** The `subdirectory` parameter determines the folder inside `/config/www/`:
+
+* With `subdirectory: "php"`, `/config/www/php/` is used as the Document Root.
+* With `subdirectory: "my-app"`, `/config/www/my-app/` is used.
+
 The Add-on automatically creates:
 
 1. `/config/www/` (if it doesn't exist)
-2. `/config/www/php/` (if it doesn't exist)
+2. `/config/www/[subdirectory]/` (if it doesn't exist)
 3. A default `index.php` (if it doesn't exist)
 
 ### Step 4: Start
@@ -67,7 +74,7 @@ Upon the first start, the Add-on automatically creates:
 
 You can then:
 
-1. Create your own PHP files in `/config/www/php/`.
+1. Create your own PHP files in `/config/www/[subdirectory]/`.
 2. Open them in your browser: `http://homeassistant.local:8099`.
 
 **Example:** Create `/config/www/php/test.php`:
@@ -84,7 +91,7 @@ Access: `http://homeassistant.local:8099/test.php`
 
 ### Accessing Home Assistant Data
 
-The Add-on has full read/write access to `/config/www/php`:
+The Add-on has full read/write access to `/config`:
 
 ```php
 <?php
