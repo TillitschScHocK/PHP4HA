@@ -1,5 +1,5 @@
 name: "PHP Web Server"
-version: "1.0.0"
+version: "1.0.1"
 slug: "php_webserver"
 description: "PHP web server with access to Home Assistant configuration directory"
 url: "https://github.com/TillitschScHocK/PHP4HA"
@@ -12,18 +12,22 @@ arch:
 init: false
 startup: application
 boot: auto
+webui: "http://[HOST]:[PORT:8099]"
+ingress: false
+panel_icon: mdi:language-php
 options:
   port: 8099
-  document_root: "/config/www"
+  subdirectory: "php"
   php_display_errors: "Off"
   php_memory_limit: "128M"
 schema:
   port: port
-  document_root: str
+  subdirectory: str
   php_display_errors: list(On|Off)
   php_memory_limit: str
 ports:
   8099/tcp: 8099
+ports_description:
+  8099/tcp: PHP Web Server
 map:
   - config:rw
-image: "ghcr.io/tillitschschock/php4ha-{arch}"

@@ -2,48 +2,57 @@
 
 ## Installation
 
-Follow these steps to install the PHP Web Server add-on:
+Folge diesen Schritten zur Installation des PHP Web Server Add-ons:
 
-1. Navigate to the Supervisor panel in your Home Assistant interface
-2. Click on the Add-on Store
-3. Add this repository: `https://github.com/TillitschScHocK/PHP4HA`
-4. Find "PHP Web Server" and click Install
+1. Navigiere zum Supervisor-Panel in deiner Home Assistant Oberfläche
+2. Klicke auf den Add-on Store
+3. Füge dieses Repository hinzu: `https://github.com/TillitschScHocK/PHP4HA`
+4. Finde "PHP Web Server" und klicke auf Installieren
 
-## How to use
+## Verwendung
 
-After installation:
+Nach der Installation:
 
-1. Configure the add-on settings (port, document root, etc.)
-2. Start the add-on
-3. Check the logs to ensure it started successfully
-4. Access your PHP web server at `http://homeassistant.local:8099` (or your configured port)
+1. Konfiguriere die Add-on Einstellungen (Port, Unterverzeichnis, etc.)
+2. Starte das Add-on
+3. Überprüfe die Logs, um sicherzustellen, dass es erfolgreich gestartet wurde
+4. Greife auf deinen PHP-Webserver zu: `http://homeassistant.local:8099`
 
-## Configuration
+## Konfiguration
 
-The add-on can be configured with the following options:
+Das Add-on kann mit folgenden Optionen konfiguriert werden:
 
-### Port (required)
+### Port (erforderlich)
 
-The network port the PHP server will listen on.
+Der Netzwerk-Port, auf dem der PHP-Server lauschen wird.
 
 ```yaml
 port: 8099
 ```
 
-### Document Root (required)
+### Subdirectory (erforderlich)
 
-The directory where your PHP files are located. This should be a path within the Home Assistant `/config` directory.
+Das Unterverzeichnis in `/config/www/`, in dem sich deine PHP-Dateien befinden.
 
 ```yaml
-document_root: "/config/www"
+subdirectory: "php"
 ```
+
+**Wichtig:** Das Add-on erstellt automatisch:
+- `/config/www/` (falls nicht vorhanden)
+- `/config/www/[subdirectory]/` (falls nicht vorhanden)
+- Eine Standard-`index.php` (falls nicht vorhanden)
+
+**Beispiele:**
+- `subdirectory: "php"` → Document Root: `/config/www/php/`
+- `subdirectory: "meine-app"` → Document Root: `/config/www/meine-app/`
 
 ### PHP Display Errors (optional)
 
-Controls whether PHP errors are displayed in the browser.
+Steuert, ob PHP-Fehler im Browser angezeigt werden.
 
-- `On`: Show errors (useful for development)
-- `Off`: Hide errors (recommended for production)
+- `On`: Fehler anzeigen (nützlich für Entwicklung)
+- `Off`: Fehler verbergen (empfohlen für Produktion)
 
 ```yaml
 php_display_errors: "Off"
@@ -51,15 +60,15 @@ php_display_errors: "Off"
 
 ### PHP Memory Limit (optional)
 
-Sets the maximum amount of memory a PHP script may consume.
+Setzt die maximale Speichermenge, die ein PHP-Skript verbrauchen darf.
 
 ```yaml
 php_memory_limit: "128M"
 ```
 
-## PHP Extensions Included
+## Enthaltene PHP-Extensions
 
-This add-on includes the following PHP extensions:
+Dieses Add-on enthält folgende PHP-Extensions:
 
 - opcache
 - mysqli
@@ -80,27 +89,30 @@ This add-on includes the following PHP extensions:
 - pdo
 - pdo_mysql
 - pdo_sqlite
+- fileinfo
 
-## Creating Your First PHP Page
+## Deine erste PHP-Seite erstellen
 
-1. Using the File Editor add-on or SSH, create a directory `/config/www` if it doesn't exist
-2. Create a file `/config/www/index.php` with the following content:
+1. Das Add-on erstellt automatisch `/config/www/[subdirectory]/`
+2. Beim ersten Start wird eine Standard-`index.php` erstellt
+3. Du kannst diese bearbeiten oder eigene PHP-Dateien hinzufügen
+
+**Beispiel:** Erstelle `/config/www/php/info.php`:
 
 ```php
 <?php
-echo "<h1>Welcome to PHP on Home Assistant!</h1>";
+echo "<h1>Willkommen bei PHP auf Home Assistant!</h1>";
 phpinfo();
 ?>
 ```
 
-3. Start the PHP Web Server add-on
-4. Open your browser and navigate to `http://homeassistant.local:8099`
+Zugriff: `http://homeassistant.local:8099/info.php`
 
-## Accessing Home Assistant Data
+## Zugriff auf Home Assistant Daten
 
-Since the add-on has access to the `/config` directory, you can read Home Assistant configuration files, access the database, and more.
+Da das Add-on Zugriff auf das `/config` Verzeichnis hat, kannst du Home Assistant Konfigurationsdateien lesen, auf die Datenbank zugreifen und mehr.
 
-### Example: Reading a YAML file
+### Beispiel: YAML-Datei lesen
 
 ```php
 <?php
@@ -112,35 +124,56 @@ if (file_exists($yaml_file)) {
 ?>
 ```
 
+### Beispiel: Dateien im config-Verzeichnis auflisten
+
+```php
+<?php
+$files = scandir('/config');
+echo "<ul>";
+foreach($files as $file) {
+    if($file != '.' && $file != '..') {
+        echo "<li>$file</li>";
+    }
+}
+echo "</ul>";
+?>
+```
+
 ## Troubleshooting
 
-### Add-on won't start
+### Add-on startet nicht
 
-- Check the add-on logs for error messages
-- Verify the document root path exists
-- Ensure the port is not already in use
+- Überprüfe die Add-on Logs auf Fehlermeldungen
+- Stelle sicher, dass der Port nicht bereits verwendet wird
+- Überprüfe, ob genügend Speicherplatz vorhanden ist
 
-### Cannot access the web server
+### Kann nicht auf den Webserver zugreifen
 
-- Verify the add-on is running
-- Check your Home Assistant network configuration
-- Try accessing via IP address instead of hostname
-- Ensure the port is not blocked by a firewall
+- Überprüfe, ob das Add-on läuft
+- Überprüfe deine Home Assistant Netzwerkkonfiguration
+- Versuche den Zugriff über die IP-Adresse statt Hostname
+- Stelle sicher, dass der Port nicht durch eine Firewall blockiert wird
 
-### PHP errors not showing
+### PHP-Fehler werden nicht angezeigt
 
-- Set `php_display_errors: "On"` in the configuration
-- Restart the add-on after changing configuration
+- Setze `php_display_errors: "On"` in der Konfiguration
+- Starte das Add-on nach der Konfigurationsänderung neu
 
-## Security Considerations
+### Verzeichnis wird nicht erstellt
 
-- Use `php_display_errors: "Off"` in production environments
-- Be cautious when exposing this add-on to the internet
-- Implement proper authentication in your PHP applications
-- Keep your PHP code secure and updated
-- Avoid storing sensitive data in web-accessible directories
+- Das Add-on erstellt automatisch `/config/www/[subdirectory]/`
+- Überprüfe die Logs, ob Berechtigungsfehler auftreten
+- Stelle sicher, dass `/config` beschreibbar ist
+
+## Sicherheitshinweise
+
+- Verwende `php_display_errors: "Off"` in Produktionsumgebungen
+- Sei vorsichtig beim Öffnen dieses Add-ons für das Internet
+- Implementiere eine ordnungsgemäße Authentifizierung in deinen PHP-Anwendungen
+- Halte deinen PHP-Code sicher und aktuell
+- Vermeide die Speicherung sensibler Daten in web-zugänglichen Verzeichnissen
 
 ## Support
 
-For issues, questions, or feature requests:
+Für Probleme, Fragen oder Feature-Requests:
 - GitHub Issues: https://github.com/TillitschScHocK/PHP4HA/issues

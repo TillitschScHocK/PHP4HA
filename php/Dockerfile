@@ -25,16 +25,17 @@ RUN apk add --no-cache \
     php83-pdo \
     php83-pdo_mysql \
     php83-pdo_sqlite \
-    bash
+    php83-fileinfo \
+    bash \
+    jq
 
 # Create symbolic link for php
 RUN ln -s /usr/bin/php83 /usr/bin/php
 
-# Copy run script
-COPY run.sh /
-RUN chmod a+x /run.sh
+# Copy data
+COPY rootfs /
 
-# Create www directory
-RUN mkdir -p /config/www
+# Make run script executable
+RUN chmod a+x /etc/services.d/php-server/run
 
-CMD [ "/run.sh" ]
+WORKDIR /

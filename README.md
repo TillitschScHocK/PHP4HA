@@ -1,6 +1,6 @@
-# PHP4HA - PHP Web Server for Home Assistant
+# PHP4HA - PHP Web Server für Home Assistant
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![Version](https://img.shields.io/badge/version-1.0.1-blue.svg)
 ![PHP](https://img.shields.io/badge/PHP-8.3-purple.svg)
 ![Home Assistant](https://img.shields.io/badge/Home%20Assistant-Add--on-blue.svg)
 
@@ -10,9 +10,10 @@ Ein vollständiger PHP-Webserver als Home Assistant Add-on mit direktem Zugriff 
 
 - 🚀 **PHP 8.3** mit allen gängigen Extensions
 - 📁 **Direkter Zugriff** auf `/config` Verzeichnis
-- ⚙️ **Konfigurierbar** (Port, Document Root, PHP-Einstellungen)
+- ⚙️ **Konfigurierbar** (Port, Unterverzeichnis, PHP-Einstellungen)
 - 🌐 **Einfacher Zugriff** über Browser
 - 🔧 **Mehrere Architekturen** unterstützt (amd64, aarch64, armv7, armhf, i386)
+- 🛡️ **Automatische Verzeichnis-Erstellung** mit korrekten Berechtigungen
 
 ## Installation
 
@@ -40,10 +41,19 @@ Beispiel-Konfiguration:
 
 ```yaml
 port: 8099
-document_root: "/config/www"
+subdirectory: "php"
 php_display_errors: "Off"
 php_memory_limit: "128M"
 ```
+
+**Wichtig:** Der `subdirectory` Parameter bestimmt den Ordner in `/config/www/`:
+- Mit `subdirectory: "php"` wird `/config/www/php/` als Document Root verwendet
+- Mit `subdirectory: "meine-app"` wird `/config/www/meine-app/` verwendet
+
+Das Add-on erstellt automatisch:
+1. `/config/www/` (falls nicht vorhanden)
+2. `/config/www/[subdirectory]/` (falls nicht vorhanden)  
+3. Eine Standard-`index.php` (falls nicht vorhanden)
 
 ### Schritt 4: Starten
 
@@ -55,8 +65,15 @@ php_memory_limit: "128M"
 
 ### Erste PHP-Datei erstellen
 
-1. Erstelle das Verzeichnis `/config/www` (falls nicht vorhanden)
-2. Erstelle eine Datei `/config/www/index.php`:
+Das Add-on erstellt automatisch beim ersten Start:
+- Das Verzeichnis `/config/www/[subdirectory]/`
+- Eine Beispiel-`index.php`
+
+Du kannst dann:
+1. Eigene PHP-Dateien in `/config/www/[subdirectory]/` erstellen
+2. Im Browser öffnen: `http://homeassistant.local:8099`
+
+**Beispiel:** Erstelle `/config/www/php/test.php`:
 
 ```php
 <?php
@@ -65,7 +82,7 @@ echo "<p>Server-Zeit: " . date('d.m.Y H:i:s') . "</p>";
 ?>
 ```
 
-3. Öffne im Browser: `http://homeassistant.local:8099`
+Zugriff: `http://homeassistant.local:8099/test.php`
 
 ### Zugriff auf Home Assistant Daten
 
@@ -84,7 +101,7 @@ echo "<pre>" . htmlspecialchars($config) . "</pre>";
 | Option | Typ | Standard | Beschreibung |
 |--------|-----|----------|-------------|
 | `port` | Port | 8099 | Webserver-Port |
-| `document_root` | String | /config/www | Wurzelverzeichnis für PHP-Dateien |
+| `subdirectory` | String | php | Unterordner in /config/www/ |
 | `php_display_errors` | Liste | Off | Fehleranzeige (On/Off) |
 | `php_memory_limit` | String | 128M | PHP-Speicherlimit |
 
@@ -95,7 +112,7 @@ echo "<pre>" . htmlspecialchars($config) . "</pre>";
 - xml, phar, intl
 - dom, xmlreader, xmlwriter
 - simplexml, ctype, mbstring
-- gd, session
+- gd, session, fileinfo
 - pdo, pdo_mysql, pdo_sqlite
 
 ## Beispielprojekte
@@ -104,7 +121,7 @@ echo "<pre>" . htmlspecialchars($config) . "</pre>";
 
 ```php
 <?php
-// API-Token aus Secrets lesen
+// API-Token aus Supervisor Environment lesen
 $token = getenv('SUPERVISOR_TOKEN');
 
 // Home Assistant API aufrufen
@@ -130,20 +147,27 @@ foreach ($states as $state) {
 
 ### Add-on startet nicht
 
-- Prüfe die Logs
+- Prüfe die Logs im Add-on
 - Stelle sicher, dass der Port nicht bereits verwendet wird
-- Überprüfe, ob das Document Root existiert
+- Überprüfe, ob genügend Speicherplatz vorhanden ist
 
 ### Kann nicht auf den Server zugreifen
 
 - Prüfe, ob das Add-on läuft
-- Versuche den Zugriff über die IP-Adresse
+- Versuche den Zugriff über die IP-Adresse: `http://192.168.x.x:8099`
 - Überprüfe Firewall-Einstellungen
 
 ### PHP-Fehler werden nicht angezeigt
 
 - Setze `php_display_errors: "On"` in der Konfiguration
 - Starte das Add-on neu
+- Überprüfe die Logs für Fehler
+
+### Installation schlägt fehl
+
+- Überprüfe die Supervisor-Logs: `ha supervisor logs`
+- Stelle sicher, dass du die neueste Home Assistant Version verwendest
+- Versuche ein anderes Base-Image (wird automatisch für deine Architektur gewählt)
 
 ## Sicherheitshinweise
 

@@ -1,0 +1,102 @@
+#!/usr/bin/with-contenv bashio
+# shellcheck shell=bash
+# ==============================================================================
+# Home Assistant Add-on: PHP Web Server
+# Runs the PHP built-in web server
+# ==============================================================================
+
+# Get configuration
+PORT=$(bashio::config 'port')
+SUBDIR=$(bashio::config 'subdirectory')
+PHP_DISPLAY_ERRORS=$(bashio::config 'php_display_errors')
+PHP_MEMORY_LIMIT=$(bashio::config 'php_memory_limit')
+
+# Set document root
+DOCUMENT_ROOT="/config/www/${SUBDIR}"
+
+bashio::log.info "Starting PHP Web Server..."
+bashio::log.info "Port: ${PORT}"
+bashio::log.info "Document Root: ${DOCUMENT_ROOT}"
+
+# Create www directory if it doesn't exist
+if [ ! -d "/config/www" ]; then
+    bashio::log.info "Creating /config/www directory"
+    mkdir -p /config/www
+    chmod 755 /config/www
+fi
+
+# Create subdirectory if it doesn't exist
+if [ ! -d "${DOCUMENT_ROOT}" ]; then
+    bashio::log.info "Creating document root directory: ${DOCUMENT_ROOT}"
+    mkdir -p "${DOCUMENT_ROOT}"
+    chmod 755 "${DOCUMENT_ROOT}"
+fi
+
+# Create a default index.php if none exists
+if [ ! -f "${DOCUMENT_ROOT}/index.php" ]; then
+    bashio::log.info "Creating default index.php"
+    cat > "${DOCUMENT_ROOT}/index.php" << 'EOF'
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHP Web Server</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { color: #18bcf2; }
+        .info { background: #e3f2fd; padding: 15px; border-radius: 5px; margin: 20px 0; }
+        code { background: #f5f5f5; padding: 2px 6px; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 PHP Web Server läuft!</h1>
+        <div class="info">
+            <strong>Server-Zeit:</strong> <?php echo date('d.m.Y H:i:s'); ?><br>
+            <strong>PHP Version:</strong> <?php echo PHP_VERSION; ?><br>
+            <strong>Document Root:</strong> <code><?php echo $_SERVER['DOCUMENT_ROOT']; ?></code>
+        </div>
+        <p>Dein PHP Web Server ist erfolgreich gestartet. Du kannst jetzt deine PHP-Dateien in diesem Verzeichnis ablegen.</p>
+        <hr>
+        <details>
+            <summary><strong>📋 PHP Info anzeigen</strong></summary>
+            <?php phpinfo(); ?>
+        </details>
+    </div>
+</body>
+</html>
+EOF
+    chmod 644 "${DOCUMENT_ROOT}/index.php"
+fi
+
+# Set PHP configuration
+export PHP_DISPLAY_ERRORS="${PHP_DISPLAY_ERRORS}"
+export PHP_MEMORY_LIMIT="${PHP_MEMORY_LIMIT}"
+
+bashio::log.info "==========================================="
+bashio::log.info "PHP Web Server erfolgreich gestartet!"
+bashio::log.info "URL: http://homeassistant.local:${PORT}"
+bashio::log.info "Verzeichnis: ${DOCUMENT_ROOT}"
+bashio::log.info "==========================================="
+
+# Start PHP built-in web server
+cd "${DOCUMENT_ROOT}" || exit 1
+exec php -S 0.0.0.0:${PORT} \
+    -d display_errors="${PHP_DISPLAY_ERRORS}" \
+    -d memory_limit="${PHP_MEMORY_LIMIT}" \
+    -d error_reporting=E_ALL \
+    -d log_errors=1 \
+    -d error_log="/proc/1/fd/1"

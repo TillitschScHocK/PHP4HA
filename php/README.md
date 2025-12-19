@@ -1,79 +1,85 @@
 # Home Assistant Add-on: PHP Web Server
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![Version](https://img.shields.io/badge/version-1.0.1-blue.svg)
 
 ## About
 
-This add-on provides a PHP web server with direct access to your Home Assistant configuration directory. Perfect for hosting custom PHP applications, dashboards, or tools that integrate with Home Assistant.
+Dieser Add-on stellt einen PHP-Webserver mit direktem Zugriff auf dein Home Assistant Konfigurationsverzeichnis bereit. Perfekt für eigene PHP-Anwendungen, Dashboards oder Tools, die mit Home Assistant integriert werden sollen.
 
 ## Features
 
-- 🚀 PHP 8.3 with common extensions
-- 📁 Direct access to `/config` directory
-- ⚙️ Configurable document root
-- 🔧 Customizable PHP settings
-- 🌐 Web-based access to your PHP applications
+- 🚀 PHP 8.3 mit gängigen Extensions
+- 📁 Direkter Zugriff auf `/config` Verzeichnis
+- ⚙️ Konfigurierbares Unterverzeichnis
+- 🔧 Anpassbare PHP-Einstellungen
+- 🌐 Web-basierter Zugriff auf deine PHP-Anwendungen
 
 ## Installation
 
-1. Add this repository to your Home Assistant add-on store:
-   - Go to **Supervisor** → **Add-on Store** → **⋮** (top right) → **Repositories**
-   - Add: `https://github.com/TillitschScHocK/PHP4HA`
+1. Füge dieses Repository zu deinem Home Assistant Add-on Store hinzu:
+   - Gehe zu **Einstellungen** → **Add-ons** → **Add-on Store** → **⋮** (oben rechts) → **Repositories**
+   - Füge hinzu: `https://github.com/TillitschScHocK/PHP4HA`
 
-2. Find "PHP Web Server" in the add-on store and click **Install**
+2. Finde "PHP Web Server" im Add-on Store und klicke auf **Installieren**
 
-3. Configure the add-on (see Configuration section below)
+3. Konfiguriere das Add-on (siehe Konfiguration unten)
 
-4. Start the add-on
+4. Starte das Add-on
 
-## Configuration
+## Konfiguration
 
-Example configuration:
+Beispiel-Konfiguration:
 
 ```yaml
 port: 8099
-document_root: "/config/www"
+subdirectory: "php"
 php_display_errors: "Off"
 php_memory_limit: "128M"
 ```
 
 ### Option: `port`
 
-The port on which the PHP web server will listen.
+Der Port, auf dem der PHP-Webserver lauscht.
 
-### Option: `document_root`
+### Option: `subdirectory`
 
-The root directory for your PHP files. Default is `/config/www`.
+Der Unterordner in `/config/www/` für deine PHP-Dateien. 
+Dein Document Root wird dann: `/config/www/[subdirectory]`
+
+Beispiel: Mit `subdirectory: "php"` wird das Verzeichnis `/config/www/php` verwendet.
 
 ### Option: `php_display_errors`
 
-Whether to display PHP errors. Use "On" for development, "Off" for production.
+Ob PHP-Fehler angezeigt werden sollen. Verwende "On" für Entwicklung, "Off" für Produktion.
 
 ### Option: `php_memory_limit`
 
-PHP memory limit. Default is "128M".
+PHP Speicherlimit. Standard ist "128M".
 
-## Usage
+## Verwendung
 
-1. Place your PHP files in the configured document root (default: `/config/www`)
-2. Access your PHP application at: `http://homeassistant.local:8099`
+1. Das Add-on erstellt automatisch das Verzeichnis `/config/www/[subdirectory]`
+2. Platziere deine PHP-Dateien in diesem Verzeichnis
+3. Greife auf deine PHP-Anwendung zu: `http://homeassistant.local:8099`
 
-### Example PHP File
+### Beispiel PHP-Datei
 
-Create `/config/www/index.php`:
+Erstelle `/config/www/php/test.php`:
 
 ```php
 <?php
-echo "<h1>Hello from Home Assistant!</h1>";
-echo "<p>Server time: " . date('Y-m-d H:i:s') . "</p>";
+echo "<h1>Hallo von Home Assistant!</h1>";
+echo "<p>Server-Zeit: " . date('d.m.Y H:i:s') . "</p>";
 ?>
 ```
 
+Zugriff: `http://homeassistant.local:8099/test.php`
+
 ## Support
 
-For issues and feature requests, please visit:
+Für Probleme und Feature-Requests besuche bitte:
 https://github.com/TillitschScHocK/PHP4HA/issues
 
-## License
+## Lizenz
 
-MIT License - see LICENSE file for details
+MIT License - siehe LICENSE Datei für Details
