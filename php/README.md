@@ -1,85 +1,84 @@
 # Home Assistant Add-on: PHP Web Server
 
-![Version](https://img.shields.io/badge/version-1.0.1-blue.svg)
-
 ## About
 
-Dieser Add-on stellt einen PHP-Webserver mit direktem Zugriff auf dein Home Assistant Konfigurationsverzeichnis bereit. Perfekt für eigene PHP-Anwendungen, Dashboards oder Tools, die mit Home Assistant integriert werden sollen.
+This add-on provides a PHP web server with direct access to your Home Assistant configuration directory. Perfect for custom PHP applications, dashboards, or tools that need to integrate with Home Assistant.
 
 ## Features
 
-- 🚀 PHP 8.3 mit gängigen Extensions
-- 📁 Direkter Zugriff auf `/config` Verzeichnis
-- ⚙️ Konfigurierbares Unterverzeichnis
-- 🔧 Anpassbare PHP-Einstellungen
-- 🌐 Web-basierter Zugriff auf deine PHP-Anwendungen
+* 🚀 PHP 8.3 with common extensions
+* 📁 Direct access to the `/config` directory
+* ⚙️ Configurable subdirectory
+* 🔧 Customizable PHP settings
+* 🌐 Web-based access to your PHP applications
 
 ## Installation
 
-1. Füge dieses Repository zu deinem Home Assistant Add-on Store hinzu:
-   - Gehe zu **Einstellungen** → **Add-ons** → **Add-on Store** → **⋮** (oben rechts) → **Repositories**
-   - Füge hinzu: `https://github.com/TillitschScHocK/PHP4HA`
+1. Add this repository to your Home Assistant Add-on Store:
+* Go to **Settings** → **Add-ons** → **Add-on Store** → **⋮** (top right) → **Repositories**
+* Add: `https://github.com/TillitschScHocK/PHP4HA`
 
-2. Finde "PHP Web Server" im Add-on Store und klicke auf **Installieren**
 
-3. Konfiguriere das Add-on (siehe Konfiguration unten)
+2. Find "PHP Web Server" in the Add-on Store and click **Install**.
+3. Configure the add-on (see Configuration below).
+4. Start the add-on.
 
-4. Starte das Add-on
+## Configuration
 
-## Konfiguration
-
-Beispiel-Konfiguration:
+Example configuration:
 
 ```yaml
 port: 8099
 subdirectory: "php"
 php_display_errors: "Off"
 php_memory_limit: "128M"
+
 ```
 
 ### Option: `port`
 
-Der Port, auf dem der PHP-Webserver lauscht.
+The port on which the PHP web server listens.
 
 ### Option: `subdirectory`
 
-Der Unterordner in `/config/www/` für deine PHP-Dateien. 
-Dein Document Root wird dann: `/config/www/[subdirectory]`
+The subfolder in `/config/www/` for your PHP files.
+Your Document Root will be: `/config/www/[subdirectory]`
 
-Beispiel: Mit `subdirectory: "php"` wird das Verzeichnis `/config/www/php` verwendet.
+Example: With `subdirectory: "php"`, the directory `/config/www/php` is used.
 
 ### Option: `php_display_errors`
 
-Ob PHP-Fehler angezeigt werden sollen. Verwende "On" für Entwicklung, "Off" für Produktion.
+Whether PHP errors should be displayed. Use "On" for development, "Off" for production.
 
 ### Option: `php_memory_limit`
 
-PHP Speicherlimit. Standard ist "128M".
+PHP memory limit. Default is "128M".
 
-## Verwendung
+## Usage
 
-1. Das Add-on erstellt automatisch das Verzeichnis `/config/www/[subdirectory]`
-2. Platziere deine PHP-Dateien in diesem Verzeichnis
-3. Greife auf deine PHP-Anwendung zu: `http://homeassistant.local:8099`
+1. The add-on automatically creates the directory `/config/www/[subdirectory]`.
+2. Place your PHP files in this directory.
+3. Access your PHP application: `http://homeassistant.local:8099`
 
-### Beispiel PHP-Datei
+### Example PHP File
 
-Erstelle `/config/www/php/test.php`:
+Create `/config/www/php/test.php`:
 
 ```php
 <?php
-echo "<h1>Hallo von Home Assistant!</h1>";
-echo "<p>Server-Zeit: " . date('d.m.Y H:i:s') . "</p>";
+echo "<h1>Hello from Home Assistant!</h1>";
+echo "<p>Server time: " . date('Y-m-d H:i:s') . "</p>";
 ?>
+
 ```
 
-Zugriff: `http://homeassistant.local:8099/test.php`
+Access: `http://homeassistant.local:8099/test.php`
 
 ## Support
 
-Für Probleme und Feature-Requests besuche bitte:
-https://github.com/TillitschScHocK/PHP4HA/issues
+For issues and feature requests, please visit:
+[https://github.com/TillitschScHocK/PHP4HA/issues](https://github.com/TillitschScHocK/PHP4HA/issues)
 
-## Lizenz
+## License
 
-MIT License - siehe LICENSE Datei für Details
+MIT License - see LICENSE file for details
