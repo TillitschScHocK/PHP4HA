@@ -1,7 +1,7 @@
 name: "PHP Web Server"
 version: "1.0.1"
 slug: "php_webserver"
-description: "PHP web server with access to Home Assistant configuration directory"
+description: "A simple PHP webserver for hosting PHP applications."
 url: "https://github.com/TillitschScHocK/PHP4HA"
 arch:
   - aarch64
