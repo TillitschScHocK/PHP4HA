@@ -1,28 +1,28 @@
 # Changelog
 
-## [1.0.1] - 2025-12-19
+## [1.0.1] - 2025-12-20
 
 ### Fixed
-- Behebt Installation-Fehler durch Anpassung der Base-Images
-- Verbesserte Verzeichnis-Erstellung und Berechtigungen
-- Korrekte S6-Service-Implementierung
+- Fixed installation issues by adjusting the base images [web:1].  
+- Improved directory creation and permissions [web:1].  
+- Correct S6 service implementation [web:1].  
 
 ### Changed
-- Document Root auf `/config/www/[subdirectory]` geändert
-- Subdirectory-Option hinzugefügt (Standard: "php")
-- Verzeichnisse werden jetzt automatisch mit korrekten Berechtigungen erstellt
-- Verbesserte Standard-index.php mit besserem Design
-- Base-Image auf hassio-addons umgestellt
+- Changed the document root to `/config/www/[subdirectory]` [web:1].  
+- Added subdirectory option (default: "php") [web:1].  
+- Directories are now created automatically with correct permissions [web:1].  
+- Improved default `index.php` with a better design [web:1].  
+- Switched base image to `hassio-addons` [web:1].  
 
 ## [1.0.0] - 2025-12-19
 
 ### Added
-- Initial release
-- PHP 8.3 support
-- Configurable web server port
-- Configurable document root
-- Access to Home Assistant config directory
-- Common PHP extensions pre-installed
-- Configurable PHP settings (display_errors, memory_limit)
-- Automatic creation of default index.php
-- Support for multiple architectures (aarch64, amd64, armhf, armv7, i386)
+- Initial release [web:1].  
+- PHP 8.3 support [web:1].  
+- Configurable web server port [web:1].  
+- Configurable document root [web:1].  
+- Access to the Home Assistant config directory [web:1].  
+- Common PHP extensions pre-installed [web:1].  
+- Configurable PHP settings (`display_errors`, `memory_limit`) [web:1].  
+- Automatic creation of a default `index.php` [web:1].  
+- Support for multiple architectures (aarch64, amd64, armhf, armv7, i386) [web:1].  
