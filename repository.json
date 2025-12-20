@@ -1,5 +1,5 @@
 {
-  "name": "PHP4HA - PHP Web Server for Home Assistant",
+  "name": "PHP4HA - Simple PHP webserver for HA",
   "url": "https://github.com/TillitschScHocK/PHP4HA",
   "maintainer": "TillitschScHocK <https://github.com/TillitschScHocK>"
 }
