@@ -3,7 +3,7 @@
 ## [1.0.2] - 2026-02-09
 
 ### Changed
-- Standardport von 8099 auf 8080 geändert.
+- Change default port from 8099 to 8080.
 
 ## [1.0.1] - 2025-12-20
 
